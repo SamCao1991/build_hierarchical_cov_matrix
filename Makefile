@@ -1,10 +1,10 @@
-Include = -I./h2lib/ -I./libmorton/include/
-Lib = -L.
+Include = -I./libmorton/include/
+Lib = -L. -lh2  -llapack -lblas -lgfortran -lcairo -lm 
 CC = g++
 CCFlags = -m64 -std=c++11 -O3
 
-test_Jian: test_Jian.o libh2.a
-	$(CC) test_Jian.o $(Lib) -lh2 -o test_Jian
+test_Jian: test_Jian.o
+	$(CC) test_Jian.o $(Lib) -o test_Jian
 
 %.o: %.cpp
 	$(CC) $(Include) $(CCFlags) -c $< -o $@
