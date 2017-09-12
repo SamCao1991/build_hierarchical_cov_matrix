@@ -15,11 +15,11 @@ using namespace std;
 
 int main()
 {
-    const int n = 256;
+    const int n = 8;
     const int N = n*n;
-    const int bsz = 256;
-    const double beta = 1.0;
-    const double epsl = 1e-1;
+    const int bsz = 8;
+    const double beta = 1;
+    const double epsl = 5e-4;
     TimeStamp myStart, myEnd;
     uint_fast32_t coordinates_int[N][2];
     cout << "Begin building geometry" << endl;
@@ -48,16 +48,22 @@ int main()
         coordinates_double[i][0] = (double) coordinates_int[i][0];
         coordinates_double[i][1] = (double) coordinates_int[i][1];
     }
+
+    cout << "Outputing geometry" << endl;
+    myStart = chrono::steady_clock::now();
+    ofstream myFile;
+    myFile.open("geom.txt");
+    for(int i = 0; i<N; i++)
+        myFile << coordinates_double[i][0] << " " << coordinates_double[i][1] << endl;
+    myFile.close();
+    myEnd = chrono::steady_clock::now();
+    cout << "Outputing geometry took " << std::chrono::duration<double> (myEnd - myStart).count() << "s" << endl;
+
     cout << "Begin building hmatrix" << endl;
     myStart = chrono::steady_clock::now();
     output_exp_hie_cov(coordinates_double,N,2,bsz,beta,epsl);
     myEnd = chrono::steady_clock::now();
     cout << "Building hmatrix took " << std::chrono::duration<double> (myEnd - myStart).count() << "s" << endl;
 
-    ofstream myFile;
-    myFile.open("geom.txt");
-    for(int i = 0; i<N; i++)
-        myFile << coordinates_double[i][0] << " " << coordinates_double[i][1] << endl;
-    myFile.close();
     return 0;
 }
